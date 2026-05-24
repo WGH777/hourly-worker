@@ -1,0 +1,8 @@
+{
+  "component": true,
+  "usingComponents": {
+    "dialog": "../dialog/dialog",
+    "calendar": "../calendar/calendar",
+    "bill-list": "../bill-list/bill-list"
+  }
+}

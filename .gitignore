@@ -1,0 +1,9 @@
+node_modules/
+dist/
+miniprogram_npm/
+.DS_Store
+*.log
+*.db
+.env
+.env.*
+pnpm-debug.log

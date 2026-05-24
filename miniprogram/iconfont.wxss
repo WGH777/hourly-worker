@@ -1,0 +1,25 @@
+@font-face {
+  font-family: 'dan-icon';  /* Project id 1760677 */
+  src: url('//at.alicdn.com/t/font_1760677_cdxmhvrt9jq.woff2?t=1640274580230') format('woff2'),
+       url('//at.alicdn.com/t/font_1760677_cdxmhvrt9jq.woff?t=1640274580230') format('woff'),
+       url('//at.alicdn.com/t/font_1760677_cdxmhvrt9jq.ttf?t=1640274580230') format('truetype');
+}
+.dan-icon {
+  font-family: "dan-icon" !important;
+  font-size: 32rpx;
+  width: fit-content;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: #a1a1a1;
+  display: inline-block;
+  position: relative;
+  top: 2rpx;
+}
+.dan-icon-exchange:before {
+  content: '\e772';
+}
+.dan-icon-delete:before {
+  content: '\e7ec';
+}
+

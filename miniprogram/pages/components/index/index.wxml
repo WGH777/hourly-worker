@@ -1,0 +1,75 @@
+<!-- 工时记录录入组件 -->
+<view class="container">
+  <!-- 日期选择 -->
+  <view class="date-picker" bindtap="bindDatePicker">
+    <text class="date-label">{{active_date === '今天' ? '📅' : '📆'}} {{active_date}}</text>
+    <text class="date-arrow">›</text>
+  </view>
+
+  <!-- 工时输入 -->
+  <view class="input-section">
+    <view class="input-row">
+      <text class="input-label">⏱ 工时</text>
+      <view class="input-wrapper">
+        <input
+          class="hours-input"
+          type="digit"
+          placeholder="0"
+          value="{{hours}}"
+          bindinput="onHoursInput"
+          focus="{{false}}"
+        />
+        <text class="unit">小时</text>
+      </view>
+    </view>
+
+    <!-- 时薪输入（可选） -->
+    <view class="input-row">
+      <text class="input-label">💰 时薪</text>
+      <view class="input-wrapper">
+        <input
+          class="rate-input"
+          type="digit"
+          placeholder="{{defaultRate || '0'}}"
+          value="{{hourlyRate}}"
+          bindinput="onRateInput"
+        />
+        <text class="unit">元/时</text>
+      </view>
+    </view>
+
+    <!-- 自动计算收入 -->
+    <view class="income-preview" wx:if="{{calculatedIncome > 0}}">
+      <text class="income-label">今日收入</text>
+      <text class="income-value">¥{{calculatedIncome}}</text>
+    </view>
+
+    <!-- 备注 -->
+    <view class="input-row note-row">
+      <text class="input-label">📝 备注</text>
+      <input
+        class="note-input"
+        placeholder="工作内容、项目名..."
+        value="{{note}}"
+        bindinput="onNoteInput"
+      />
+    </view>
+  </view>
+
+  <!-- 快捷设置时薪 -->
+  <view class="quick-rate" wx:if="{{!defaultRate && !hourlyRate}}">
+    <text class="hint-text">首次使用？设置默认时薪后每次自动带入：</text>
+    <view class="rate-presets">
+      <view class="preset" bindtap="setRate" data-rate="20">¥20</view>
+      <view class="preset" bindtap="setRate" data-rate="25">¥25</view>
+      <view class="preset" bindtap="setRate" data-rate="30">¥30</view>
+      <view class="preset" bindtap="setRate" data-rate="50">¥50</view>
+    </view>
+  </view>
+
+  <!-- 保存按钮 -->
+  <view class="submit-btn {{loading ? 'loading' : ''}}" bindtap="submitForm">
+    <text wx:if="{{!loading}}">{{isEdit ? '✏️ 更新记录' : '💾 保存记录'}}</text>
+    <text wx:else>保存中...</text>
+  </view>
+</view>

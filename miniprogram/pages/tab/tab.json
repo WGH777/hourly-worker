@@ -1,0 +1,8 @@
+{
+  "usingComponents": {
+    "calendar": "/pages/components/calendar/calendar",
+    "index": "/pages/components/index/index",
+    "list": "/pages/components/list/list"
+  },
+  "navigationStyle": "custom"
+}
