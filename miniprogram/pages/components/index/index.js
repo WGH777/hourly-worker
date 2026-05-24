@@ -1,15 +1,12 @@
-// 工时记录录入组件
+// 工时记录录入组件 - 原生 Component
+const app = getApp()
 
-
-const { importStore } = getApp()
-const { create, store } = importStore
-
-create.Component(store, {
+Component({
   options: { styleIsolation: 'shared' },
   properties: {
-    isEdit: Boolean
+    isEdit: Boolean,
+    editBill: Object
   },
-  use: ['editBill'],
   data: {
     hours: '',
     hourlyRate: '',
@@ -20,88 +17,87 @@ create.Component(store, {
     loading: false,
     defaultRate: 0
   },
-  ready() {
-    const date = dayjs().format('YYYY-MM-DD')
-    this.setData({ active_date_time: date })
-
-    // 读取用户默认时薪
-    const rate = wx.getStorageSync('defaultHourlyRate')
-    if (rate) {
-      this.setData({ defaultRate: rate, hourlyRate: String(rate) })
+  observers: {
+    'isEdit, editBill'(isEdit, editBill) {
+      if (isEdit && editBill && editBill._id) {
+        this.setData({
+          hours: String(editBill.hours || ''),
+          hourlyRate: String(editBill.hourlyRate || ''),
+          note: editBill.description || '',
+          active_date: editBill.noteDate || '今天',
+          active_date_time: editBill.noteDate || '',
+          calculatedIncome: editBill.income || 0
+        })
+      }
+    }
+  },
+  lifetimes: {
+    ready() {
+      const now = this.formatDate(new Date())
+      this.setData({ active_date_time: now })
+      const rate = wx.getStorageSync('defaultHourlyRate')
+      if (rate) {
+        this.setData({ defaultRate: rate, hourlyRate: String(rate) })
+      }
     }
   },
   methods: {
-    // 工时输入
     onHoursInput(e) {
-      const hours = e.detail.value
-      this.setData({ hours })
+      this.setData({ hours: e.detail.value })
       this.calcIncome()
     },
-    // 时薪输入
     onRateInput(e) {
       const rate = e.detail.value
       this.setData({ hourlyRate: rate })
-      // 自动记忆时薪
       if (rate && Number(rate) > 0) {
         wx.setStorageSync('defaultHourlyRate', Number(rate))
       }
       this.calcIncome()
     },
-    // 备注输入
     onNoteInput(e) {
       this.setData({ note: e.detail.value })
     },
-    // 自动计算收入
     calcIncome() {
       const h = parseFloat(this.data.hours) || 0
       const r = parseFloat(this.data.hourlyRate) || this.data.defaultRate || 0
       const income = Math.round(h * r * 100) / 100
       this.setData({ calculatedIncome: income })
     },
-    // 快捷时薪按钮
     setRate(e) {
       const rate = e.currentTarget.dataset.rate
       this.setData({ hourlyRate: String(rate), defaultRate: rate })
       wx.setStorageSync('defaultHourlyRate', rate)
       this.calcIncome()
     },
-    // 日期切换
     bindDatePicker() {
       const self = this
+      const today = new Date()
       wx.showActionSheet({
         itemList: ['今天', '昨天', '前天', '选择日期'],
         success(res) {
-          const today = dayjs()
-          let date
+          let d
           switch (res.tapIndex) {
-            case 0: date = today.format('YYYY-MM-DD')
-              self.setData({ active_date: '今天', active_date_time: date }); break
-            case 1: date = today.subtract(1, 'day').format('YYYY-MM-DD')
-              self.setData({ active_date: '昨天', active_date_time: date }); break
-            case 2: date = today.subtract(2, 'day').format('YYYY-MM-DD')
-              self.setData({ active_date: '前天', active_date_time: date }); break
+            case 0: d = today; self.setData({ active_date: '今天' }); break
+            case 1: d = new Date(today.getTime() - 86400000); self.setData({ active_date: '昨天' }); break
+            case 2: d = new Date(today.getTime() - 172800000); self.setData({ active_date: '前天' }); break
             case 3:
-              // 用原生日期选择器
               wx.showModal({
-                title: '输入日期',
-                editable: true,
-                placeholderText: today.format('YYYY-MM-DD'),
+                title: '输入日期', editable: true,
+                placeholderText: self.formatDate(today),
                 success(m) {
                   if (m.confirm && m.content && /^\d{4}-\d{2}-\d{2}$/.test(m.content)) {
                     self.setData({ active_date: m.content, active_date_time: m.content })
                   }
                 }
               })
-              break
+              return
           }
+          self.setData({ active_date_time: self.formatDate(d) })
         }
       })
     },
-    // 提交表单
     submitForm() {
-      const { hours, hourlyRate, note, active_date_time, calculatedIncome, loading, isEdit } = this.data
-      const { editBill } = this.store.data
-
+      const { hours, hourlyRate, note, active_date_time, calculatedIncome, loading } = this.data
       if (loading) return
 
       const h = parseFloat(hours)
@@ -115,6 +111,10 @@ create.Component(store, {
 
       this.setData({ loading: true })
 
+      const isEdit = this.properties.isEdit
+      const editBill = this.properties.editBill
+      const store = app.importStore.store
+
       wx.cloud.callFunction({
         name: 'account',
         data: {
@@ -124,7 +124,7 @@ create.Component(store, {
           income: income,
           noteDate: active_date_time,
           description: note,
-          id: isEdit ? editBill._id : ''
+          id: isEdit && editBill ? editBill._id : ''
         },
         success: (res) => {
           if (res.result.code === 1) {
@@ -140,31 +140,20 @@ create.Component(store, {
         }
       })
     },
-    // 重置表单
     resetForm() {
       this.setData({
-        hours: '',
-        note: '',
-        calculatedIncome: 0,
-        active_date: '今天',
-        active_date_time: dayjs().format('YYYY-MM-DD'),
-        loading: false
+        hours: '', note: '', calculatedIncome: 0,
+        active_date: '今天', active_date_time: this.formatDate(new Date()), loading: false
       })
+      const store = app.importStore.store
       store.data.editBill = {}
       store.data.isEdit = false
     },
-    // tab.js 调用，进入编辑模式
-    deactiveEdit() {
-      const { editBill } = this.store.data
-      if (!editBill || !editBill._id) return
-      this.setData({
-        hours: String(editBill.hours || ''),
-        hourlyRate: String(editBill.hourlyRate || ''),
-        note: editBill.description || '',
-        active_date: editBill.noteDate || '今天',
-        active_date_time: editBill.noteDate || dayjs().format('YYYY-MM-DD'),
-        calculatedIncome: editBill.income || 0
-      })
+    formatDate(d) {
+      const y = d.getFullYear()
+      const m = String(d.getMonth() + 1).padStart(2, '0')
+      const day = String(d.getDate()).padStart(2, '0')
+      return `${y}-${m}-${day}`
     }
   }
 })

@@ -1,19 +1,14 @@
+// 工时记账小程序入口
 import createStore from './store/omix/create'
 import store from './store/index'
 
 App({
-  importStore: {
-    create: createStore,
-    store
-  },
+  importStore: { create, store },
   onLaunch() {
     if (!wx.cloud) {
-      console.error('请使用 2.2.3 或以上的基础库以使用云能力')
+      console.error('请使用 2.2.3 或以上的基础库')
     } else {
-      wx.cloud.init({
-        traceUser: true,
-        env: 'cloud1-d3gwp48kk855cc202'
-      })
+      wx.cloud.init({ traceUser: true, env: 'cloud1-d3gwp48kk855cc202' })
     }
 
     wx.getSystemInfo({
@@ -24,9 +19,5 @@ App({
   },
   showError(title = '请求失败，请稍后再试') {
     wx.showToast({ title, icon: 'none' })
-  },
-  enterEditMode(ctx) {
-    const index = ctx.selectComponent('#index')
-    index.deactiveEdit()
   }
 })
