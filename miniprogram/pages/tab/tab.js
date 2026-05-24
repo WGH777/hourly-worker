@@ -1,5 +1,5 @@
 // 主页面 Tab 控制器
-import dayjs from 'dayjs'
+
 
 const { importStore } = getApp()
 const { create, store } = importStore

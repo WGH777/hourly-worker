@@ -1,4 +1,3 @@
-// 工时记录小程序 - 全局状态
 export default {
   data: {
     sysInfo: {
