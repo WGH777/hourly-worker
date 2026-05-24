@@ -1,7 +1,4 @@
 {
   "component": true,
-  "usingComponents": {
-    "list": "../list/list",
-    "dialog": "../dialog/dialog"
-  }
+  "usingComponents": {}
 }
