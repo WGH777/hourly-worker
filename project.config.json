@@ -39,7 +39,7 @@
     "showES6CompileOption": false,
     "useCompilerPlugins": false
   },
-  "appid": "wxda00e9b7cd5f39b1",
+  "appid": "",
   "projectname": "工时记账",
   "libVersion": "2.19.5",
   "simulatorType": "wechat",
