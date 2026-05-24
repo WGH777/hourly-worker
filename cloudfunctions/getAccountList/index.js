@@ -1,45 +1,68 @@
-// 云函数：获取工时记录列表 + 月度统计
+// 云函数：获取工时记录列表
 const cloud = require('wx-server-sdk')
-cloud.init()
+
+cloud.init({
+  env: cloud.DYNAMIC_CURRENT_ENV
+})
+
+const db = cloud.database()
+const _ = db.command
 
 const COLLECTION = 'HOURLY_RECORD'
 
-exports.main = async (event) => {
-  const wxContext = cloud.getWXContext()
-  const env = wxContext.ENV
-  cloud.updateConfig({ env })
-  const db = cloud.database({ env })
-  const _ = db.command
-
-  const { page = 1, limit = 100, startDate, endDate } = event
-
+exports.main = async (event = {}) => {
   try {
-    const basicWhere = {
+    const wxContext = cloud.getWXContext()
+
+    const page = Number(event.page || 1)
+    const limit = Number(event.limit || 50)
+
+    const {
+      startDate,
+      endDate
+    } = event
+
+    const whereData = {
       isDel: false,
-      openId: _.eq(wxContext.OPENID),
-      noteDate: _.gte(startDate).and(_.lte(endDate))
+      openId: wxContext.OPENID
     }
 
-    // 总记录数
-    const totalRes = await db.collection(COLLECTION).where(basicWhere).count()
-    const total = totalRes.total
+    // 日期筛选
+    if (startDate && endDate) {
+      whereData.noteDate = _.gte(startDate).and(_.lte(endDate))
+    }
 
-    // 分页查询
     const offset = (page - 1) * limit
-    const listRes = await db.collection(COLLECTION)
-      .where(basicWhere)
+
+    // 只查列表
+    const res = await db
+      .collection(COLLECTION)
+      .where(whereData)
+      .orderBy('createTime', 'desc')
       .skip(offset)
       .limit(limit)
-      .orderBy('noteDate', 'desc')
-      .orderBy('createTime', 'desc')
       .get()
 
     return {
       code: 1,
-      data: { list: listRes.data, total },
-      message: 'ok'
+      data: {
+        list: res.data || [],
+        total: res.data.length
+      },
+      message: 'success'
     }
-  } catch (e) {
-    return { code: -1, data: { list: [], total: 0 }, message: String(e) }
+
+  } catch (err) {
+
+    console.error('getAccountList error:', err)
+
+    return {
+      code: -1,
+      data: {
+        list: [],
+        total: 0
+      },
+      message: err.message || '服务器异常'
+    }
   }
 }

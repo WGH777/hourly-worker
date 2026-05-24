@@ -34,7 +34,7 @@
     "packNpmManually": true,
     "packNpmRelationList": [
       {
-        "packageJsonPath": "./miniprogram/package.json",
+        "packageJsonPath": "./package.json",
         "miniprogramNpmDistDir": "./miniprogram/"
       }
     ],
@@ -42,14 +42,19 @@
     "disableUseStrict": false,
     "minifyWXML": true,
     "showES6CompileOption": false,
-    "useCompilerPlugins": false
+    "useCompilerPlugins": false,
+    "compileWorklet": false,
+    "localPlugins": false,
+    "condition": false,
+    "swc": false,
+    "disableSWC": true
   },
-  "appid": "",
+  "appid": "wxded4b19ffd5d22e8",
   "projectname": "工时记账",
-  "libVersion": "2.19.5",
+  "libVersion": "3.16.1",
   "simulatorType": "wechat",
   "simulatorPluginLibVersion": {},
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate",
+  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
   "condition": {
     "plugin": {
       "list": []
@@ -82,5 +87,11 @@
         }
       ]
     }
-  }
+  },
+  "compileType": "miniprogram",
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
 }
