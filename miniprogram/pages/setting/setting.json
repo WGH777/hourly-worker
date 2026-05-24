@@ -1,7 +1,4 @@
 {
-  "usingComponents": {
-    "nav": "../components/nav/nav",
-    "dialog": "../components/dialog/dialog",
-    "relate": "../components/relate/relate"
-  }
+  "navigationStyle": "custom",
+  "usingComponents": {}
 }
