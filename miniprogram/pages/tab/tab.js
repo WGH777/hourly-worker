@@ -5,7 +5,7 @@ const { importStore } = getApp()
 const { create, store } = importStore
 
 create.Page(store, {
-  use: ['currentMonthData', 'editBill', 'showTabbar', 'activeTab', 'isEdit'],
+  use: ['sysInfo.screenHeight', 'sysInfo.statusBarHeight', 'currentMonthData', 'editBill', 'showTabbar', 'activeTab', 'isEdit'],
   data: {
     scale: null,
     monthSummary: {},

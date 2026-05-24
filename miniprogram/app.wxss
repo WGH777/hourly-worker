@@ -2,7 +2,8 @@
 @import "./reset.wxss";
 
 page {
-  background-color: #7571e015;
+  background-color: #0f172a;
+  background-color: #0f172a;
 }
 .container {
   display: flex;
