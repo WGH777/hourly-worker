@@ -2,8 +2,9 @@ const DAY_NUM = 42
 const WEEK_DAY_NUM = 7
 const DATE_CHECK = /^(\d{4})-(\d{2})-(\d{2})$/
 const TWOMONTH_TIMESTAMP = 5184000000
-const { importStore } = getApp()
-const { create, store } = importStore
+import create from '../../../store/omix/create'
+import store from '../../../store/index'
+
 create.Component(store, {
   properties: {
     defaultSelectDate: {

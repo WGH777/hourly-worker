@@ -1,6 +1,7 @@
 <nav
   class="nav-instance"
   showIcons="{{['back']}}"
+  statusBarHeight="{{statusBarHeight}}"
 ></nav>
 <view class="search">
   <view class="banner">
@@ -8,12 +9,7 @@
       <image
         src="https://images.vrm.cn/2019/08/29/pig.png"
         style="width: 120rpx;height: 120rpx;"
-        bindtap="resetSearch"
       ></image>
-      <view class='pig-talk' wx:if="{{word}}" bindtap="resetSearch">
-        <view class='word-tang-left'></view>
-        <view class='word-detail'>{{word}}</view>
-      </view>
     </view>
   </view>
   <input
@@ -24,19 +20,25 @@
     auto-focus
     focus="{{isFocus}}"
     confirm-type="search"
-    placeholder="输入搜索账单"
+    placeholder="输入搜索工时记录"
     bindconfirm='confirmTap'
-    placeholder-style="color:#e2e2e2;"
+    placeholder-style="color:#94a3b8;"
   />
 </view>
+<view class="place"></view>
 <view class="search-result">
-  <view class="place"></view>
   <view class="empty-search" wx:if="{{isSearching}}">查询中...</view>
-  <bill-list
-    billList="{{billList}}"
-    bind:onEdit="onEditBill"
-    bind:reFetchBillList="onReFetchBillList"
-    showLoading="{{false}}"
-    fixHeight="{{150}}"
-  ></bill-list>
+  <view class="empty-search" wx:elif="{{!results.length && !isSearching && keyword}}">未找到匹配记录</view>
+  <view class="result-list" wx:else>
+    <view class="result-item" wx:for="{{results}}" wx:key="_id" bindtap="onItemTap" data-item="{{item}}">
+      <view class="ri-header">
+        <text class="ri-date">{{item.noteDate}}</text>
+        <text class="ri-hours">{{item.hours}}h</text>
+      </view>
+      <view class="ri-body">
+        <text class="ri-income">¥{{item.income}}</text>
+        <text class="ri-desc" wx:if="{{item.description}}">{{item.description}}</text>
+      </view>
+    </view>
+  </view>
 </view>
