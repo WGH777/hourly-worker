@@ -1,15 +1,9 @@
 {
   "name": "getAccountList",
   "version": "1.0.0",
-  "description": "",
+  "description": "工时记录列表查询云函数",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "dayjs": "^1.10.7",
-    "wx-server-sdk": "latest"
+    "wx-server-sdk": "^2.3.0"
   }
 }

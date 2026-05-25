@@ -1,4 +1,5 @@
 // 云函数：工时记录 CRUD
+// updateById / deleteById 必须同时校验 _id 和 openId，防止越权
 const cloud = require('wx-server-sdk')
 cloud.init()
 
@@ -29,8 +30,9 @@ exports.main = async (event) => {
       return { code: 1, data: res, message: '记录成功' }
     }
 
-    // 更新一条记录
+    // 更新一条记录（必须校验 openId）
     if (mode === 'updateById') {
+      if (!id) return { code: -1, message: '记录 ID 不能为空' }
       const data = {
         hours: Number(hours),
         hourlyRate: Number(hourlyRate || 0),
@@ -39,14 +41,23 @@ exports.main = async (event) => {
         description: description || '',
         updateTime: db.serverDate()
       }
-      const res = await db.collection(COLLECTION).doc(id).update({ data })
-      return { code: 1, data: res, message: '修改成功' }
+      const res = await db.collection(COLLECTION)
+        .where({ _id: id, openId: wxContext.OPENID })
+        .update({ data })
+      return res.stats.updated > 0
+        ? { code: 1, data: res, message: '修改成功' }
+        : { code: -1, message: '无权限或记录不存在' }
     }
 
-    // 逻辑删除
+    // 逻辑删除（必须校验 openId）
     if (mode === 'deleteById') {
-      const res = await db.collection(COLLECTION).doc(id).update({ data: { isDel: true } })
-      return { code: 1, data: res, message: '删除成功' }
+      if (!id) return { code: -1, message: '记录 ID 不能为空' }
+      const res = await db.collection(COLLECTION)
+        .where({ _id: id, openId: wxContext.OPENID })
+        .update({ data: { isDel: true, updateTime: db.serverDate() } })
+      return res.stats.updated > 0
+        ? { code: 1, data: res, message: '删除成功' }
+        : { code: -1, message: '无权限或记录不存在' }
     }
 
     return { code: -1, message: '未知操作模式' }

@@ -8,7 +8,7 @@ App({
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库')
     } else {
-      wx.cloud.init({ traceUser: true, env: 'cloud1-d3gwp48kk855cc202' })
+      wx.cloud.init({ traceUser: true, env: 'your-cloud-env-id' })
     }
 
     wx.getSystemInfo({

@@ -1,8 +1,8 @@
 {
-  "name": "dandan-account",
+  "name": "hourly-worker",
   "version": "1.0.0",
-  "description": "<p align=\"center\"> <br><br>   <img width=\"828\" height=\"752\" src=\"https://i.loli.net/2019/09/25/ZgszKMi8TluwGcj.jpg\"><br>   <br><br><br>   <b>无任何信息授权</b><br>   <b>持续更新</b><br>   <b>🎉欢迎使用🎉</b><br>   <b>🎉欢迎star && fork🎉</b><br>   <br><br><br> </p>",
-  "main": "app.js",
+  "description": "工时记账 — 微信小程序端工时记录与收入统计工具",
+  "main": "miniprogram/app.js",
   "dependencies": {
     "dayjs": "^1.10.7",
     "wx-server-sdk": "^2.3.0"
@@ -22,20 +22,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/GzhiYi/dandan-account.git"
+    "url": "git+https://github.com/WGH777/hourly-worker.git"
   },
   "keywords": [
-    "accounting"
+    "hourly",
+    "worker",
+    "accounting",
+    "wechat",
+    "miniprogram"
   ],
-  "author": "GzhiYi",
+  "author": "WGH777",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/GzhiYi/dandan-account/issues"
+    "url": "https://github.com/WGH777/hourly-worker/issues"
   },
   "husky": {
     "hooks": {
       "pre-commit": "npm run pre-commit"
     }
   },
-  "homepage": "https://github.com/GzhiYi/dandan-account#readme"
+  "homepage": "https://github.com/WGH777/hourly-worker#readme"
 }
