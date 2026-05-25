@@ -3,7 +3,7 @@ import createStore from './store/omix/create'
 import store from './store/index'
 
 App({
-  importStore: { create, store },
+  importStore: { create: createStore, store },
   onLaunch() {
     if (!wx.cloud) {
       console.error('请使用 2.2.3 或以上的基础库')
